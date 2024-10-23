@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-900 h-screen flex items-center justify-center p-4 overflow-hidden">
+
+    <div class="flex flex-col w-full max-w-md bg-zinc-800 rounded-lg p-6">
+        <div class="flex items-center gap-4">
+            <div class="w-20 h-20 bg-zinc-600 rounded-md overflow-hidden outline-none">
+                <img  class = "w-full h-full object-cover " src= "/images/uploads/ <%= user.profilepic %>" alt="">
+            </div>
+            <h1 class="text-3xl text-white text-center">HELLO 👋 <%= user.name %></h1>
+        </div>
+        
+        <h1 class="text-white text-xl font-bold mb-4  text-center">Create New Posts Here</h1>
+        <form action="/posts" method="POST" class="space-y-4">
+            <textarea name="content" placeholder="What's on your mind?" 
+                class="w-full h-32 p-3 bg-transparent border border-gray-700 text-white rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+            
+            <div class="flex justify-between">
+                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-900 focus:outline-none">Post it</button>
+                
+                <a href="/logout" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-900 focus:outline-none">Logout</a>
+            </div>
+        </form>
+        <div class="mt-6 overflow-y-auto" style="max-height: calc(100vh - 300px);">
+            <h2 class="text-xl text-white mb-2 text-center">Your Posts:</h2>
+            <% if (user.posts && user.posts.length) { %>
+                <% user.posts.reverse().forEach(post => { %>
+                    <div class="post bg-zinc-700 p-4 text-white rounded-md mt-4">
+                        <h4 class="text-blue-500">@<%= user.username %></h4>
+                        <p><%= post.content %></p>
+                        <div class="flex gap-4 mt-2">
+                            <a class="text-green-500" href="/like/<%= post._id %>">
+                                <%= post.likes.indexOf(user._id) === -1  ?  "👍" : "👎" %>
+                            </a>
+                            <a class="text-blue-500" href="/edit">Edit</a>
+                        </div>
+                        <small class = " mt-1 text-white inline-block" > <%= post.likes.length  %>  </small>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="text-red-700 text-center">No posts yet.</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
